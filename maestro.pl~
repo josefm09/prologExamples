@@ -1,0 +1,32 @@
+maestro(elisa).
+maestro(fernando).
+maestro(carlos).
+materia(logica).
+materia(programacion).
+materia(matematicas).
+
+dias(lunes).
+dias(miercoles).
+dias(viernes).
+
+%imparte
+
+imparte(carlos,Dia) :- dias(Dia),Dia\=lunes.
+imparte(Maestro,Dia):- maestro(Maestro),dias(Dia),Maestro\=carlos.
+%horario
+horario(programacion,viernes).
+horario(logica,Dia):- dias(Dia),Dia\=lunes.
+horario(matematicas,Dia):- dia(Dia).
+
+%imparte
+daClase(elisa, programacion).
+daClase(Prof,Mat):- maestro(Prof),materia(Mat),Prof\=elisa.
+
+diferentes(A,B,C):- A\=B,A\=C,B\=C.
+
+horario([Dia1,Mat1,Prof1],[Dia2,Mat2,Prof2],[Dia3,Mat3,Prof3]):-maestro(Prof1),materia(Mat1),dias(Dia1),maestro(Prof2),materia(Mat2),dias(Dia2),maestro(Prof3),materia(Mat3),dias(Dia3),diferentes(Prof1,Prof2,Prof3),diferentes(Mat1,Mat2,Mat3),diferentes(Dia1,Dia2,Dia3),imparte(Prof1,Dia1),imparte(Prof2,Dia2),imparte(Prof3,Dia3),horario(Mat1,Dia1),horario(Mat2,Dia2),horario(Mat3,Dia3),daClase(Prof1,Mat1),daClase(Prof2,Mat2),daClase(Prof3,Mat3).
+
+
+
+
+
