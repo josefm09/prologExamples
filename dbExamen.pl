@@ -1,12 +1,14 @@
-vence(majinbuu,cell).
-vence(cell,dabura).
-vence(dabura,picoro).
-venve(picoro,freezer).
-vence(freezer,goku).
-vence(goku,vegeta).
-vence(vegeta,gohan).
-vence(gohan,trunks).
-vence(trunks,goten).
+
+poder(goten, 600).
+poder(trunks, 600).
+poder(gohan, 600).
+poder(vegeta, 600).
+poder(goku, 600).
+poder(freezer,1000).
+poder(picoro, 2000).
+poder(dabura, 2000).
+poder(cell, 2000).
+poder(majinbuu, 4000).
 
 sayan(goten).
 sayan(trunks).
@@ -14,14 +16,28 @@ sayan(gohan).
 sayan(vegeta).
 sayan(goku).
 
-ssj(X):- sayan(X), assertz(vence(X,freezer)).
+tieneCola(vegeta).
+tieneCola(goten).
+tieneCola(trunks).
 
-ssj2(X):- ssj(X), assertz(vence(X,cell)).
+puedeMistico(gohan).
 
-ssj3(X):- ssj2(X), assertz(vence(X,majinbuu)).
+puedeSSJ4(vegeta).
 
-%ssj4(X):- ssj3(X), assertz(vence("SSJ4"+X,freezer)).
-gana(X,Y):- vence(X,Y).
-gana(X,Y):- vence(X,Z), gana(Z,Y), X\=Y.
+nacioEnTierra(goten).
+nacioEnTierra(trunks).
 
+ssj(X):- dynamic(poder/2), sayan(X),retract(poder(X, 600)), assertz(poder(X, 1200)).
 
+ssj2(X):- dynamic(poder/2), ssj(X),retract(poder(X, 1200)), assertz(poder(X, 2400)), not(nacioEnTierra(X)), not(poder(gotenks,_)).
+
+ssj3(X):- dynamic(poder/2), ssj2(X),retract(poder(X, 2400)), assertz(poder(X, 4800)), not(puedeMistico(X)), not(puedeSSJ4(X)), not(nacioEnTierra(X)).
+
+mistico(X):- dynamic(poder/2), ssj2(X), puedeMistico(X), retract(poder(X, 2400)), assertz(poder(X, 6000)).
+
+ssj4(X):- dynamic(poder/2), ssj2(X);ssj(X), sayan(vegeta), tieneCola(X), retract(poder(X, 2400)), assertz(poder(X, 5500)).
+
+fusion(X,Y):- dynamic(poder/2), nacioEnTierra(X), nacioEnTierra(Y), tieneCola(X), tieneCola(Y), retract(poder(X, _)), retract(poder(Y,_)), assertz(poder(gotenks, 600)).
+
+vence(X,Y):- poder(X,A), poder(Y,B), menor(B,A).
+menor(P,Q):- P < Q.
