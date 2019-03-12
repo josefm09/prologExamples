@@ -29,7 +29,7 @@ nacioEnTierra(trunks).
 
 ssj(X):- dynamic(poder/2), sayan(X),retract(poder(X, 600)), assertz(poder(X, 1200)).
 
-ssj2(X):- dynamic(poder/2), ssj(X),retract(poder(X, 1200)), assertz(poder(X, 2400)), not(nacioEnTierra(X)), not(poder(gotenks,_)).
+ssj2(X):- dynamic(poder/2), ssj(X),retract(poder(X, _)), assertz(poder(X, 2400)), not(nacioEnTierra(X)), not(poder(gotenks,_)).
 
 ssj3(X):- dynamic(poder/2), ssj2(X),retract(poder(X, 2400)), assertz(poder(X, 4800)), not(puedeMistico(X)), not(puedeSSJ4(X)), not(nacioEnTierra(X)).
 
