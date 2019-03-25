@@ -1,0 +1,4 @@
+
+
+longitud([],0).
+longitud([_|C],Rsp):- longitud([C|_],Rsp).
