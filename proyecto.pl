@@ -2,6 +2,7 @@
 :-dynamic
     alumno/2,
     materia/4,
+    semestre/2,
     lista/1.
 
 %tabaja. semestreActual
@@ -68,23 +69,51 @@ validarTrabaja(Res, ResAux):-
 	read(Otro),
     validarTrabaja(Otro, ResAux). 
 
-%planCarga(Semestre,[Creditos,[ListaMaterias]]):-
-almacenaSemestre(0).
-
+%planCarga(Semestre,[Creditos,[ListaMaterias]]):
 almacenaSemestre(SemestreActual):-
-    write("Escribe las materias que llevaste en el semestre "),write(SemestreActual),
+    SemestreActual > 0,
+    write("Escribe las materias que llevaste en el semestre "),write(SemestreActual),write(" (escribe ""stop"" para capturar el semestre anterior)"),
     read(ResMateria),
-    dif(ResMateria,stop),
-    agregar(ResMateria, materias),
-    almacenaSemestre(SemestreActual).    
+    dif(ResMateria,stop) ->
+    (
+        assertz(semestre(SemestreActual, ResMateria)),
+        almacenaSemestre(SemestreActual)    
+    ;   
+        almacenaSemestreAux(SemestreActual)
+    ).
+    
+    
 
-almacenaSemestre(SemestreActual):-
+almacenaSemestreAux(SemestreActual):-    
     SemestreAux is SemestreActual - 1,
-    almacenaSemestre(SemestreAux).
+    SemestreAux > 0 ->
+    (
+        almacenaSemestre(SemestreAux)
+    ;
+        validarRC
+    ).
 
-agregar(X, LL) :-
-    (   retract(lista(Anterior))
-    ->  LL = [X|Anterior]
-    ;   LL = [X]
-    ),
-    asserta(lista(LL)).
+validarRC:-
+    findall(X, materia(X,_,_,_), Reticula),
+    findall(Y, semestre(_,Y), Materias),
+    forall(
+        contar(X, Materias, ResMateria),
+        ResMateria > 0 ->
+        (
+            asserta(rc(X))
+            ;
+            ResMateria > 1 ->
+            (
+                asserta(especial(X))
+                ;
+                retract(materia(X,_,_,_))
+            )
+        ) 
+    ).
+
+contar(X,[],0). 
+contar(X,[X|L],C):- !,contar(X,L,C1), C is C1+1. 
+contar(X,[Y|L],C):- contar(X,L,C).
+    
+
+    
